@@ -1,73 +1,171 @@
-# React + TypeScript + Vite
+# BarberFlow - Sistema SaaS para Barbearias
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema completo de gestão para barbearias com agendamento online, controle financeiro, gestão de clientes e muito mais.
 
-Currently, two official plugins are available:
+## 🚀 Como rodar o projeto (SEM DOCKER)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Pré-requisitos
 
-## React Compiler
+- Node.js 18+ instalado
+- NPM ou Yarn
+- PostgreSQL instalado e rodando (local ou remoto)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Passo 1: Instalar dependências
 
-## Expanding the ESLint configuration
+Abra o terminal na pasta do projeto e execute:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Instalar dependências do backend
+cd barberflow/server
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Instalar dependências do frontend (em outro terminal)
+cd barberflow/web
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Passo 2: Configurar banco de dados
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+O projeto usa **PostgreSQL** (compatível com Railway, Neon, Supabase, VPS, AWS, Azure):
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Na pasta server
+npm run db:setup
 ```
+
+Este comando vai:
+- ✅ Criar todas as tabelas no PostgreSQL
+- ✅ Popular com dados de exemplo (admin, barbeiros, serviços, clientes)
+
+### Passo 3: Iniciar o backend
+
+```bash
+cd barberflow/server
+npm run dev
+```
+
+O backend vai rodar em: **http://localhost:3001**
+
+### Passo 4: Iniciar o frontend
+
+Abra **outro terminal**:
+
+```bash
+cd barberflow/web
+npm run dev
+```
+
+O frontend vai abrir automaticamente em: **http://localhost:5173**
+
+## 🔐 Credenciais de acesso
+
+Após executar o seed, use estas credenciais:
+
+- **Email:** `admin@barberflow.com`
+- **Senha:** `admin123`
+
+## 📁 Estrutura do projeto
+
+```
+barberflow/
+├── server/                 # Backend (Node.js + Express + Prisma + PostgreSQL)
+│   ├── prisma/
+│   │   ├── schema.prisma   # Modelos do banco de dados
+│   │   ├── seed.ts         # Dados de exemplo
+│   │   └── migrations/     # Migrations do banco de dados
+│   └── src/
+│       ├── config/         # Configurações
+│       ├── middlewares/    # Auth, validação, erros
+│       ├── repositories/   # Acesso a dados
+│       ├── services/       # Lógica de negócio
+│       ├── controllers/    # Controllers
+│       └── routes/         # Rotas da API
+│
+├── web/                    # Frontend (React + Vite + Tailwind)
+│   └── src/
+│       ├── components/     # Componentes reutilizáveis
+│       ├── pages/          # Páginas
+│       ├── services/       # Chamadas à API
+│       └── lib/            # Utilitários
+│
+└── README.md
+```
+
+## 🛠️ Tecnologias
+
+### Backend
+- Node.js + Express
+- TypeScript
+- Prisma ORM
+- PostgreSQL (compatível com Railway, Neon, Supabase, VPS, AWS, Azure)
+- JWT + Refresh Token
+- Zod (validação)
+- Bcrypt (senhas)
+
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- TailwindCSS
+- shadcn/ui
+- React Query
+- React Router
+- Framer Motion
+- Recharts
+
+## 📊 Funcionalidades
+
+### ✅ Implementado
+- [x] Autenticação (JWT + Refresh Token)
+- [x] Multi-tenant (cada barbearia isolada)
+- [x] CRUD de Clientes
+- [x] CRUD de Barbeiros
+- [x] CRUD de Serviços
+- [x] CRUD de Agendamentos
+- [x] Verificação de conflitos de horário
+- [x] Controle de acesso por perfil (RBAC)
+- [x] Validação de dados (Zod)
+- [x] Segurança (Helmet, Rate Limit, CORS)
+
+### 🔜 Em desenvolvimento
+- [ ] Dashboard com KPIs
+- [ ] Calendário interativo
+- [ ] Módulo financeiro
+- [ ] Estoque
+- [ ] Relatórios
+- [ ] Notificações
+- [ ] Agenda online pública
+- [ ] App mobile (PWA)
+
+## 🎯 Comandos úteis
+
+```bash
+# Backend
+cd barberflow/server
+npm run dev              # Iniciar servidor em modo desenvolvimento
+npm run db:setup         # Criar banco e popular com dados
+npm run db:seed          # Apenas popular com dados
+npm run db:reset         # Resetar banco e popular novamente
+
+# Frontend
+cd barberflow/web
+npm run dev              # Iniciar frontend em modo desenvolvimento
+npm run build            # Build para produção
+```
+
+## 🎯 Como usar
+
+1. **Cadastrar barbearia:** Acesse `/api/auth/register`
+2. **Fazer login:** Acesse `/api/auth/login`
+3. **Gerenciar clientes:** `GET/POST/PUT/DELETE /api/clients`
+4. **Gerenciar barbeiros:** `GET/POST/PUT/DELETE /api/barbers`
+5. **Gerenciar serviços:** `GET/POST/PUT/DELETE /api/services`
+6. **Agendamentos:** `GET/POST/PUT/DELETE /api/appointments`
+
+## 📝 Licença
+
+Este projeto é proprietário e foi desenvolvido para fins comerciais.
+
+---
+
+**Desenvolvido com ❤️ por Euller Funes**
